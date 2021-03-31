@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 project(Fast_RNRR)
 
 #--- CMake configuration
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+#set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 #--- Compiler configuration
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
@@ -39,18 +40,23 @@ file(GLOB HEADERS "./src/*.h" "./src/geodesic/*.h" "./src/tools/*.h")
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 #--- Libigl
-include_directories("./library/libigl/include/")
+#include_directories("./library/libigl/include/")
+include_directories(${libigl_include_dir})
 
 #--- openmesh libs
-target_link_libraries(${PROJECT_NAME}
-    OpenMeshCore OpenMeshTools)
+#target_link_libraries(${PROJECT_NAME}
+#    OpenMeshCore OpenMeshTools)
+target_link_libraries(${PROJECT_NAME} ${OPENMESH_LIBRARIES})
 
 
 if(APPLE OR UNIX)
     #--- Deploy data folder link
-    execute_process(COMMAND ln -f -s ${CMAKE_SOURCE_DIR}/data WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+    #execute_process(COMMAND ln -f -s ${CMAKE_SOURCE_DIR}/data WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+    execute_process(COMMAND ln -f -s ${CMAKE_CURRENT_SOURCE_DIR}/data WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
     #--- "Dummy" target to have data appear in QtCreator
-    add_custom_target(data SOURCES ${CMAKE_SOURCE_DIR}/data)
+    #add_custom_target(data SOURCES ${CMAKE_SOURCE_DIR}/data)
+    add_custom_target(data SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/data)
 else()
-    file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${PROJECT_BINARY_DIR})
+    #file(COPY ${CMAKE_SOURCE_DIR}/data DESTINATION ${PROJECT_BINARY_DIR})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/data DESTINATION ${PROJECT_BINARY_DIR})
 endif()

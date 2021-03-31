@@ -5,7 +5,9 @@ FIND_PATH(
     nanoflann.hpp
     # where should I look?
     $ENV{NANOFLANN_DIR}
-    ${CMAKE_SOURCE_DIR}/include)
+    #${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
 
 IF(NANOFLANN_INCLUDE_DIR)
    SET(NANOFLANN_FOUND TRUE)
